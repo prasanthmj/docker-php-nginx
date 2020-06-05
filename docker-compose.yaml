@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prasanthmj/alpine-php-nginx
+    container_name: alpinephpapp
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    ports:
+        - 4100:8080
+    volumes:
+      - ./wordpress:/var/www/html
+    
+  db:
+    image: mysql
+    container_name: myappdb
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: UcpWJ4gQE8qCVSyD
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: muser
+      MYSQL_PASSWORD: qKqcxptGgadvsvcK
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+#Volumes
+volumes:
+  dbdata:
+    driver: local
