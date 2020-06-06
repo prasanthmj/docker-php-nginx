@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: prasanthmj/alpine-php-nginx
-    container_name: alpinephpapp
+    container_name: alpinephpx
     restart: unless-stopped
     tty: true
     environment:
@@ -17,10 +17,11 @@ services:
         - 4100:8080
     volumes:
       - ./wordpress:/var/www/html
+      - ./cache:/var/nginx/cache
     
   db:
     image: mysql
-    container_name: myappdb
+    container_name: pappdb
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
     tty: true

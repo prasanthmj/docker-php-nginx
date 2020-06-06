@@ -12,6 +12,8 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 
 COPY config/php-common.conf /etc/nginx/snippets/php-common.conf
 
+COPY config/fastcgi-cache.conf /etc/nginx/snippets/fastcgi-cache.conf
+
 COPY config/nginx-common.conf /etc/nginx/snippets/nginx-common.conf
 
 COPY config/default.conf /etc/nginx/conf.d/default.conf
