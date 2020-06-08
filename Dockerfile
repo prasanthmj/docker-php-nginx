@@ -4,8 +4,8 @@ LABEL Maintainer="Tim de Pater <code@trafex.nl>" \
 
 # Install packages
 RUN apk --no-cache add php7 php7-fpm php7-pdo php7-pdo_mysql php7-opcache php7-mysqli php7-json php7-openssl php7-curl \
-    php7-zlib php7-xml php7-phar php7-intl php7-dom php7-ctype php7-session \
-    php7-mbstring php7-tokenizer php7-gd nginx supervisor curl
+    php7-zlib php7-xml php7-simplexml php7-phar php7-intl php7-dom php7-ctype php7-session \
+    php7-mbstring php7-tokenizer php7-gd nginx supervisor 
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -26,14 +26,20 @@ COPY config/php.ini /etc/php7/conf.d/custom.ini
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
 # Setup document root
 RUN mkdir -p /var/www/html
+
+RUN mkdir -p /var/nginx/cache
 
 RUN adduser --disabled-password --no-create-home --uid 998 k8s k8s
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
 RUN chown -R k8s.k8s /run && \
   chown -R k8s.k8s /var/lib/nginx && \
-  chown -R k8s.k8s /var/log/nginx
+  chown -R k8s.k8s /var/log/nginx && \
+  chown -R k8s.k8s /var/nginx/cache
 
 # Switch to use a non-root user from here on
 USER k8s
